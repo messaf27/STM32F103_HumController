@@ -54,7 +54,8 @@ WeAct_STM32G031F6P6_F32KB_R8KB.list \
 
 
 # All Target
-all: main-build
+all:
+	+@$(MAKE) --no-print-directory pre-build && $(MAKE) --no-print-directory main-build
 
 # Main-build Target
 main-build: WeAct_STM32G031F6P6_F32KB_R8KB.elf secondary-outputs
@@ -80,6 +81,10 @@ clean:
 	-$(RM) WeAct_STM32G031F6P6_F32KB_R8KB.elf WeAct_STM32G031F6P6_F32KB_R8KB.list WeAct_STM32G031F6P6_F32KB_R8KB.map default.size.stdout
 	-@echo ' '
 
+pre-build:
+	arm-none-eabi-objcopy -O ihex WeAct_STM32G031F6P6_F32KB_R8KB.elf WeAct_STM32G031F6P6_F32KB_R8KB.hex
+	-@echo ' '
+
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
 
 fail-specified-linker-script-missing:
@@ -89,6 +94,6 @@ fail-specified-linker-script-missing:
 warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
-.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
+.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified pre-build
 
 -include ../makefile.targets
